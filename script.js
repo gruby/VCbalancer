@@ -110,8 +110,15 @@ function stringifyOutcome(a) {
     return t
 }
 
-action.onclick = () => {
-    //action.style.display = 'none';
+function stringifyStatistics(aa) {
+    tt = ""
+    aa.forEach(vvc => {
+        tt=tt+"VC_"+String(Number(aa.indexOf(vvc)+1))+" IERs: "+numberOfTasks(vvc,"iers")+" CRs:"+numberOfTasks(vvc,"crs")+"<br>"
+    });
+    return tt;
+}
+
+action.onclick = () => {    
     populateVCs(numberOfVCs);
     processInput(inputwindow.value);
     console.log(vcs)
@@ -121,7 +128,7 @@ action.onclick = () => {
     //console.log(expertWorkload[0].crs)
     //console.log(JSON.stringify(inputwindow.value.trim()))
     //console.log(expertWorkload);
-    outcomewindow.innerHTML = "Here are some statistics:"+" and here :)";
+    //outcomewindow.innerHTML = "Here are some statistics:"+" and here :)";
     vcs.forEach((vc) => vc.push(expertWorkload.shift()));
     while (expertWorkload.length > 0) {
         findLeastBusyVC().push(expertWorkload.shift());
@@ -136,5 +143,7 @@ action.onclick = () => {
     //console.log(findLeastBusyVC())
     //findLeastBusyVC().push(expertWorkload.shift());
     //console.log(expertWorkload)
-    inputwindow.value = stringifyOutcome(vcs)
+    //inputwindow.value = stringifyOutcome(vcs)
+    outcomewindow.innerHTML = stringifyStatistics(vcs)
+    action.style.display = 'none';
 }
