@@ -1,9 +1,11 @@
-let inputwindow = document.getElementById('invalues');
+let inputwindow = document.getElementById('wlin');
+let nbvc = document.getElementById('vcin');
 let action = document.getElementById('action');
 let outcomewindow = document.getElementById('outcome');
 let expertWorkload = [];
+let numberOfVCs = Number(nbvc.value)
 let vcs = [];
-let numberOfVCs = 7;
+
 
 function populateVCs(a) {
     for (i=1;i<=a;i++) {
@@ -48,7 +50,7 @@ function processInput(indata) {
         here.expid = splited[0];
         here.iers = Number(splited[1]);
         here.crs = Number(splited[2]);
-        here.total = here.crs*2 + here.iers;
+        here.tot = Number(here.crs*2 + here.iers);
         expertWorkload.push(here);
     });
     return expertWorkload.sort(by_iers).sort(by_crs)
@@ -59,10 +61,10 @@ numberOfTasks = function(items, prop){
         return a + b[prop];
     },0);
 }
-
+/*
 function findLeastBusyVC() {
-    minVal = 100
-    minVC = 0
+    let minVal = 1000
+    let minVC = []
     vcs.forEach((vc) => {
         if (numberOfTasks(vc,'crs') < minVal) {
             minVal = numberOfTasks(vc,'crs');
@@ -72,23 +74,67 @@ function findLeastBusyVC() {
     );
     return minVC
 };
-    
+*/
+
+function findLeastBusyVC() {
+    let minVal = 10000
+    let minVC = []
+    if (expertWorkload[0].crs > 0) {
+        vcs.forEach((vc) => {
+            if (numberOfTasks(vc,'crs') < minVal) {
+                minVal = numberOfTasks(vc,'crs');
+                minVC = vc
+            }
+        }        
+        );
+    } else {
+        vcs.forEach((vc) => {
+            if (numberOfTasks(vc,'iers') < minVal) {
+                minVal = numberOfTasks(vc,'iers');
+                minVC = vc
+            }
+        }        
+        );
+    }    
+    return minVC
+};
+
+function stringifyOutcome(a) {
+    t = "";
+    a.forEach(vcc => {
+        vcc.forEach(ex => {
+            t = t+ex.expid+"\t"+"VC_"+String(Number(a.indexOf(vcc)+1))+"\n"
+        });
+        t=t+"\n"
+    });
+    return t
+}
 
 action.onclick = () => {
-    //console.log(expertWorkload.length)
+    //action.style.display = 'none';
     populateVCs(numberOfVCs);
     processInput(inputwindow.value);
-    //console.log(expertWorkload.length)
+    console.log(vcs)
+    //console.log(expertWorkload)
+    //console.log(numberOfTasks(expertWorkload,'crs'))
+    //console.log(expertWorkload)
+    //console.log(expertWorkload[0].crs)
     //console.log(JSON.stringify(inputwindow.value.trim()))
     //console.log(expertWorkload);
-    //outcomewindow.innerHTML = expertWorkload;
+    outcomewindow.innerHTML = "Here are some statistics:"+" and here :)";
     vcs.forEach((vc) => vc.push(expertWorkload.shift()));
     while (expertWorkload.length > 0) {
         findLeastBusyVC().push(expertWorkload.shift());
+        //console.log(findLeastBusyVC());
+        //expertWorkload.shift();
     }
-    console.log(vcs);
+    console.log(stringifyOutcome(vcs));
+    vcs.forEach(ee => {
+        console.log([numberOfTasks(ee,"iers"), numberOfTasks(ee,"crs"), numberOfTasks(ee,'tot')])
+    });
+    //console.log(numberOfTasks(vcs[0],'tot'))
     //console.log(findLeastBusyVC())
     //findLeastBusyVC().push(expertWorkload.shift());
     //console.log(expertWorkload)
-    //inputwindow.value = "hello\tbaba\thellooo"
+    inputwindow.value = stringifyOutcome(vcs)
 }
