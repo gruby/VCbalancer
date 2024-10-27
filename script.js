@@ -33,16 +33,6 @@ function by_iers(a,b) {
     return 0;
 }
 
-function by_total(a,b) {
-    if (a.total>b.total) {
-        return -1;
-    }
-    if (a.total<b.total) {
-        return 1;
-    }
-    return 0;
-}
-
 function processInput(indata) {
     indata.trim().split('\n').forEach(element => {
         let here = {}
@@ -50,7 +40,6 @@ function processInput(indata) {
         here.expid = splited[0];
         here.iers = Number(splited[1]);
         here.crs = Number(splited[2]);
-        here.tot = Number(here.crs*2 + here.iers);
         expertWorkload.push(here);
     });
     return expertWorkload.sort(by_iers).sort(by_crs)
@@ -61,20 +50,6 @@ numberOfTasks = function(items, prop){
         return a + b[prop];
     },0);
 }
-/*
-function findLeastBusyVC() {
-    let minVal = 1000
-    let minVC = []
-    vcs.forEach((vc) => {
-        if (numberOfTasks(vc,'crs') < minVal) {
-            minVal = numberOfTasks(vc,'crs');
-            minVC = vc
-        }
-    }        
-    );
-    return minVC
-};
-*/
 
 function findLeastBusyVC() {
     let minVal = 10000
@@ -137,9 +112,8 @@ action.onclick = () => {
     }
     console.log(stringifyOutcome(vcs));
     vcs.forEach(ee => {
-        console.log([numberOfTasks(ee,"iers"), numberOfTasks(ee,"crs"), numberOfTasks(ee,'tot')])
+        console.log([numberOfTasks(ee,"iers"), numberOfTasks(ee,"crs")])
     });
-    //console.log(numberOfTasks(vcs[0],'tot'))
     //console.log(findLeastBusyVC())
     //findLeastBusyVC().push(expertWorkload.shift());
     //console.log(expertWorkload)

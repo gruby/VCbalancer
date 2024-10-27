@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {
+            background-color: rgb(219, 219, 219);
+        }
+        #maindiv {
+            background-color: white;
+            width: 800px;
+            margin: auto;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Balancing the workload of VCs</title>
 </head>
 <body>
-    <h6>
-        Paste from excel 3 columns of (expert, number of IERs, number of CRs) in the bigger window bellow. Data should look like the sample text there.
-        Below type the number of VC that will be following those experts. 
-    </h6>
-    <br>
-    <textarea name="wl" id="wlin" cols="50" rows="10" placeholder=
+    <div id="maindiv">
+        <h6>
+            Paste from excel 3 columns of (expert, number of IERs, number of CRs) in the bigger window bellow. 
+            Data should look like the sample text there.
+            Below type the number of VC that will be following those experts. 
+        </h6><br><br>
+        <textarea name="wl" id="wlin" cols="50" rows="10" placeholder=
 "EXP 1   0   3
 EXP 2   4   5
-EXP 3   6   8"></textarea>
-    <br><br>
-    <textarea name="vs" id="vcin" cols="50" rows="1"></textarea>
-    <br><br>
-    <button id="action">calculate</button>
-    <div id="outcome">
-        <p>
-        </p>   
-    </div>
+EXP 3   6   8">
+        </textarea>
+        <br><br>
+        <h6>
+            Insert the number of VCs:
+        </h6>
+        <textarea name="vs" id="vcin" cols="50" rows="1"></textarea>
+        <br><br>
+        <button id="action">calculate</button>
+        <div id="outcome">
+            <p>
+            </p>   
+        </div>
+    </div>    
 </body>
 <script src="script.js"></script>
 </html>
