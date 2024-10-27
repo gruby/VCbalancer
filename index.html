@@ -10,6 +10,9 @@
             width: 800px;
             margin: auto;
         }
+        td {
+            text-align: center;
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,15 +21,18 @@
 <body>
     <div id="maindiv">
         <h6>
-            Paste from excel 3 columns of (expert, number of IERs, number of CRs) in the bigger window bellow. 
-            Data should look like the sample text there.
-            Below type the number of VC that will be following those experts. 
-        </h6><br><br>
+            Paste from excel 3 columns of ( expert | number of IERs | number of CRs ) in the bigger window bellow. <br>
+            Data should look like the sample text there. <br>
+            Below type the number of VC that will be following those experts and press 'cacluclate' <br>
+            If you wish to introduce new data refresh the browser (F5).<br>
+            In case results from the previous calculations still persists, refresh the browse again. <br>
+            *Script prioritizes equal distribution of CR tasks over IERs. 
+        </h6>
+        <br><br>
         <textarea name="wl" id="wlin" cols="50" rows="10" placeholder=
 "EXP 1   0   3
 EXP 2   4   5
-EXP 3   6   8">
-        </textarea>
+EXP 3   6   8"></textarea>
         <br><br>
         <h6>
             Insert the number of VCs:

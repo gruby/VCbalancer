@@ -78,7 +78,8 @@ function stringifyOutcome(a) {
     t = "";
     a.forEach(vcc => {
         vcc.forEach(ex => {
-            t = t+ex.expid+"\t"+"VC_"+String(Number(a.indexOf(vcc)+1))+"\n"
+            //t = t+ex.expid+"\t"+"VC_"+String(Number(a.indexOf(vcc)+1))+"\n"
+            t = t+"VC_"+String(Number(a.indexOf(vcc)+1))+"\t"+ex.expid+"\n"
         });
         t=t+"\n"
     });
@@ -86,10 +87,11 @@ function stringifyOutcome(a) {
 }
 
 function stringifyStatistics(aa) {
-    tt = ""
+    tt = "<table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
     aa.forEach(vvc => {
-        tt=tt+"VC_"+String(Number(aa.indexOf(vvc)+1))+" IERs: "+numberOfTasks(vvc,"iers")+" CRs:"+numberOfTasks(vvc,"crs")+"<br>"
+        tt=tt+"<tr><td>VC_"+String(Number(aa.indexOf(vvc)+1))+"</td><td>"+numberOfTasks(vvc,"iers")+"</td><td>"+numberOfTasks(vvc,"crs")+"</td><td>"+vvc.length+"</td></tr>"
     });
+    tt = tt+"</tr></table>"
     return tt;
 }
 
@@ -117,7 +119,7 @@ action.onclick = () => {
     //console.log(findLeastBusyVC())
     //findLeastBusyVC().push(expertWorkload.shift());
     //console.log(expertWorkload)
-    //inputwindow.value = stringifyOutcome(vcs)
+    inputwindow.value = stringifyOutcome(vcs)
     outcomewindow.innerHTML = stringifyStatistics(vcs)
     action.style.display = 'none';
 }
