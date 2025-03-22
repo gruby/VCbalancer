@@ -7,8 +7,12 @@
         }
         #maindiv {
             background-color: white;
-            width: 800px;
+            width: 1000px;
             margin: auto;
+            padding: 20px;
+        }
+        h6 {
+            font-size: 15px;
         }
         td {
             text-align: center;
@@ -21,23 +25,23 @@
 <body>
     <div id="maindiv">
         <h6>
-            Paste from excel 3 columns of ( expert | number of IERs | number of CRs ) in the bigger window bellow. <br>
+            In the first window below type the number of VCs working in your panel.<br>
+            In the bigger window bellow paste from excel 3 columns in following order: 'expert | number of IERs | number of CRs'<br>
             Data should look like the sample text there. <br>
-            Below type the number of VC that will be following those experts and press 'cacluclate' <br>
+            Press 'cacluclate' <br>
             If you wish to introduce new data refresh the browser (F5).<br>
             In case results from the previous calculations still persists, refresh the browse again. <br>
             *Script prioritizes equal distribution of CR tasks over IERs. 
         </h6>
-        <br><br>
-        <textarea name="wl" id="wlin" cols="50" rows="10" placeholder=
-"EXP 1   0   3
-EXP 2   4   5
-EXP 3   6   8"></textarea>
-        <br><br>
-        <h6>
-            Insert the number of VCs:
-        </h6>
+        Insert the number of VCs:<br>
         <textarea name="vs" id="vcin" cols="50" rows="1"></textarea>
+        <br><br>
+        Paste the data from excel here:<br>
+        <textarea name="wl" id="wlin" cols="50" rows="10" placeholder=
+"EXP 1   5   0
+EXP 2   7   5
+EXP 3   10   8"></textarea>
+        <br><br>
         <br><br>
         <button id="action">calculate</button>
         <div id="outcome">
@@ -46,5 +50,117 @@ EXP 3   6   8"></textarea>
         </div>
     </div>    
 </body>
-<script src="script.js"></script>
+<script>
+    let inputwindow = document.getElementById('wlin');
+    let nbvc = document.getElementById('vcin');
+    let action = document.getElementById('action');
+    let outcomewindow = document.getElementById('outcome');
+    let expertWorkload = [];
+    //let numberOfVCs = Number(nbvc.value)
+    let vcs = [];    
+
+    //Creates number of empty arrays equal to number of VCs
+    function populateVCs(a) {
+        for (i=1;i<=a;i++) {
+            let vc = [];
+            vcs.push(vc);
+        }
+    }
+
+    function by_crs(a,b) {
+        if (a.crs>b.crs) {
+            return -1;
+        }
+        if (a.crs<b.crs) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function by_iers(a,b) {
+        if (a.iers>b.iers) {
+            return -1;
+        }
+        if (a.iers<b.iers) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function processInput(indata) {
+        indata.trim().split('\n').forEach(element => {
+            let here = {}
+            let splited = element.split(/\t/, 3);  
+            here.expid = splited[0];
+            here.iers = Number(splited[1]);
+            here.crs = Number(splited[2]);
+            expertWorkload.push(here);
+        });
+        return expertWorkload.sort(by_iers).sort(by_crs)
+    }
+
+    numberOfTasks = function(items, prop){
+        return items.reduce( function(a,b){
+            return a + b[prop];
+        },0);
+    }
+
+    function findLeastBusyVC() {
+        let minVal = 10000
+        let minVC = []
+        if (expertWorkload[0].crs > 0) {
+            vcs.forEach((vc) => {
+                if (numberOfTasks(vc,'crs') < minVal) {
+                    minVal = numberOfTasks(vc,'crs');
+                    minVC = vc
+                }
+            }        
+            );
+        } else {
+            vcs.forEach((vc) => {
+                if (numberOfTasks(vc,'iers') < minVal) {
+                    minVal = numberOfTasks(vc,'iers');
+                    minVC = vc
+                }
+            }        
+            );
+        }    
+        return minVC
+    };
+
+    function stringifyOutcome(a) {
+        t = "";
+        a.forEach(vcc => {
+            vcc.forEach(ex => {
+                //t = t+ex.expid+"\t"+"VC_"+String(Number(a.indexOf(vcc)+1))+"\n"
+                t = t+"VC_"+String(Number(a.indexOf(vcc)+1))+"\t"+ex.expid+"\n"
+            });
+            t=t+"\n"
+        });
+        return t
+    }
+
+    function stringifyStatistics(aa) {
+        tt = "<table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
+        aa.forEach(vvc => {
+            tt=tt+"<tr><td>VC_"+String(Number(aa.indexOf(vvc)+1))+"</td><td>"+numberOfTasks(vvc,"iers")+"</td><td>"+numberOfTasks(vvc,"crs")+"</td><td>"+vvc.length+"</td></tr>"
+        });
+        tt = tt+"</tr></table>"
+        return tt;
+    }
+
+    action.onclick = () => {    
+        populateVCs(Number(nbvc.value));
+        console.log(vcs);
+        processInput(inputwindow.value);
+        vcs.forEach((vc) => vc.push(expertWorkload.shift()));
+        while (expertWorkload.length > 0) {
+            findLeastBusyVC().push(expertWorkload.shift());
+        }
+        inputwindow.value = stringifyOutcome(vcs);
+        outcomewindow.innerHTML = stringifyStatistics(vcs);
+        action.style.display = 'none';
+    }
+
+</script>
 </html>
