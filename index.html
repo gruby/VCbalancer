@@ -11,6 +11,9 @@
             margin: auto;
             padding: 20px;
         }
+        #big_window_descr {
+            width: 400px;
+        }
         h6 {
             font-size: 15px;
         }
@@ -20,6 +23,7 @@
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Freely you have received, freely give.">
     <title>Balancing the workload of VCs</title>
 </head>
 <body>
@@ -36,7 +40,9 @@
         Insert the number of VCs:<br>
         <textarea name="vs" id="vcin" cols="50" rows="1"></textarea>
         <br><br>
-        Paste the data from excel here:<br>
+        <div id="big_window_descr">
+            Paste the data from excel here:
+        </div>
         <textarea name="wl" id="wlin" cols="50" rows="10" placeholder=
 "EXP 1   5   0
 EXP 2   7   5
@@ -54,6 +60,7 @@ EXP 3   10   8"></textarea>
     let inputwindow = document.getElementById('wlin');
     let nbvc = document.getElementById('vcin');
     let action = document.getElementById('action');
+    let outcometitle = document.getElementById('big_window_descr');
     let outcomewindow = document.getElementById('outcome');
     let expertWorkload = [];
     //let numberOfVCs = Number(nbvc.value)
@@ -141,7 +148,7 @@ EXP 3   10   8"></textarea>
     }
 
     function stringifyStatistics(aa) {
-        tt = "<table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
+        tt = "<h3>STATISTICS:</h3><br><table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
         aa.forEach(vvc => {
             tt=tt+"<tr><td>VC_"+String(Number(aa.indexOf(vvc)+1))+"</td><td>"+numberOfTasks(vvc,"iers")+"</td><td>"+numberOfTasks(vvc,"crs")+"</td><td>"+vvc.length+"</td></tr>"
         });
@@ -159,6 +166,8 @@ EXP 3   10   8"></textarea>
         }
         inputwindow.value = stringifyOutcome(vcs);
         outcomewindow.innerHTML = stringifyStatistics(vcs);
+        outcometitle.style.background = "yellow";
+        outcometitle.innerHTML = "Below is a suggested solution you may paste back to excel:"
         action.style.display = 'none';
     }
 
