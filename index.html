@@ -20,6 +20,17 @@
         td {
             text-align: center;
         }
+        button {
+            background-color: rgb(115, 255, 0);
+            width: 200px;
+            padding: 30px;
+            margin: 10px;
+            font-size: large;
+            border-radius: 20px;
+        }
+        button:hover {
+            background-color: rgb(5, 165, 0);
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,12 +43,14 @@
             In the first window below type the number of VCs working in your panel.<br>
             In the bigger window bellow paste from excel 3 columns in following order: 'expert | number of IERs | number of CRs'<br>
             Data should look like the sample text there. <br>
-            Press 'cacluclate' <br>
+            Press 'cacluclate'. <br>
             Results will appear in the bigger window and some statistics below.<br>
-            If you wish to introduce new data refresh the browser (F5), and remove previous data manually, if they persist.<br>
+            If you wish to introduce new data refresh the browser (F5), and remove previous data manually, if they persist (possibly while using Firefox browser).<br>
             *Script prioritizes equal distribution of CR tasks over IERs. 
         </h6>
-        Insert the number of VCs:<br>
+        <div id="small_window_descr">
+            Insert the number of VCs:
+        </div>        
         <textarea name="vs" id="vcin" cols="50" rows="1"></textarea>
         <br><br>
         <div id="big_window_descr">
@@ -47,12 +60,9 @@
 "EXP 1   5   0
 EXP 2   7   5
 EXP 3   10   8"></textarea>
-        <br><br>
-        <br><br>
+        <br>
         <button id="action">calculate</button>
         <div id="outcome">
-            <p>
-            </p>   
         </div>
     </div>    
 </body>
@@ -148,7 +158,7 @@ EXP 3   10   8"></textarea>
     }
 
     function stringifyStatistics(aa) {
-        tt = "<h3>STATISTICS:</h3><br><table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
+        tt = "<h3>STATISTICS:</h3><table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
         aa.forEach(vvc => {
             tt=tt+"<tr><td>VC_"+String(Number(aa.indexOf(vvc)+1))+"</td><td>"+numberOfTasks(vvc,"iers")+"</td><td>"+numberOfTasks(vvc,"crs")+"</td><td>"+vvc.length+"</td></tr>"
         });
@@ -168,6 +178,8 @@ EXP 3   10   8"></textarea>
         outcomewindow.innerHTML = stringifyStatistics(vcs);
         outcometitle.style.background = "yellow";
         outcometitle.innerHTML = "Below is a suggested solution you may paste back to excel:"
+        document.getElementById('small_window_descr').style.display = 'none';
+        document.getElementById('vcin').style.display = 'none';
         action.style.display = 'none';
     }
 
