@@ -17,11 +17,17 @@
         h6 {
             font-size: 15px;
         }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th {
+            padding: 0px 25px 0px 25px;
+        }
         td {
             text-align: center;
         }
         button {
-            background-color: rgb(115, 255, 0);
+            background-color: rgb(219, 219, 219);
             width: 200px;
             padding: 30px;
             margin: 10px;
@@ -29,7 +35,7 @@
             border-radius: 20px;
         }
         button:hover {
-            background-color: rgb(5, 165, 0);
+            background-color: white;
         }
     </style>
     <meta charset="UTF-8">
@@ -39,13 +45,11 @@
 </head>
 <body>
     <div id="maindiv">
-        <h6>
-            In the first window below type the number of VCs working in your panel.<br>
-            In the bigger window bellow paste from excel 3 columns in following order: 'expert | number of IERs | number of CRs'<br>
+        <h6 id="instructions">
+            In the first window below type the number of VCs working in your panel/subpanel.<br>
+            In the bigger window below paste from excel 3 columns in following order: 'expert | number of IERs | number of CRs'<br>
             Data should look like the sample text there. <br>
-            Press 'cacluclate'. <br>
-            Results will appear in the bigger window and some statistics below.<br>
-            If you wish to introduce new data refresh the browser (F5), and remove previous data manually, if they persist (possibly while using Firefox browser).<br>
+            Press 'cacluclate'. <br>            
             *Script prioritizes equal distribution of CR tasks over IERs. 
         </h6>
         <div id="small_window_descr">
@@ -73,10 +77,8 @@ EXP 3   10   8"></textarea>
     let outcometitle = document.getElementById('big_window_descr');
     let outcomewindow = document.getElementById('outcome');
     let expertWorkload = [];
-    //let numberOfVCs = Number(nbvc.value)
     let vcs = [];    
 
-    //Creates number of empty arrays equal to number of VCs
     function populateVCs(a) {
         for (i=1;i<=a;i++) {
             let vc = [];
@@ -158,7 +160,7 @@ EXP 3   10   8"></textarea>
     }
 
     function stringifyStatistics(aa) {
-        tt = "<h3>STATISTICS:</h3><table><tr><th>VCs</th><th>Total of IERs</th><th>Total of CRs</th><th>Total of experts to follow</th></tr>"
+        tt = "<h3>STATISTICS:</h3><table><tr><td></td><td colspan='3'>Totals to follow:</td></tr>    <tr><th>VCs</th><th>IERs</th><th>CRs</th><th>Experts</th></tr>"
         aa.forEach(vvc => {
             tt=tt+"<tr><td>VC_"+String(Number(aa.indexOf(vvc)+1))+"</td><td>"+numberOfTasks(vvc,"iers")+"</td><td>"+numberOfTasks(vvc,"crs")+"</td><td>"+vvc.length+"</td></tr>"
         });
@@ -168,7 +170,7 @@ EXP 3   10   8"></textarea>
 
     action.onclick = () => {    
         populateVCs(Number(nbvc.value));
-        console.log(vcs);
+        //console.log(vcs);
         processInput(inputwindow.value);
         vcs.forEach((vc) => vc.push(expertWorkload.shift()));
         while (expertWorkload.length > 0) {
@@ -176,10 +178,10 @@ EXP 3   10   8"></textarea>
         }
         inputwindow.value = stringifyOutcome(vcs);
         outcomewindow.innerHTML = stringifyStatistics(vcs);
-        outcometitle.style.background = "yellow";
-        outcometitle.innerHTML = "Below is a suggested solution you may paste back to excel:"
+        outcometitle.style.display = 'none';
         document.getElementById('small_window_descr').style.display = 'none';
         document.getElementById('vcin').style.display = 'none';
+        document.getElementById('instructions').innerHTML = 'Below is a suggested solution calculated for '+ nbvc.value +' VCs that you may paste back to excel.</br>Below the results there are some statistics of suggested allocations.</br>You may now assign specific VCs to follow formed groups of experts.</br>If you wish to introduce data for a new caculation refresh the browser (F5)</br>If data from previous calculation persits in input windows (possibly while using Firefox browser) simply remove it manually.<br>';
         action.style.display = 'none';
     }
 
