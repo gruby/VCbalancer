@@ -176,6 +176,7 @@ EX2012D010101&#9;3&#9;1"></textarea>
         while (expertWorkload.length > 0) {
             findLeastBusyVC().push(expertWorkload.shift());
         }
+        inputwindow.readOnly = true;
         inputwindow.value = stringifyOutcome(vcs);
         outcomewindow.innerHTML = stringifyStatistics(vcs);
         outcometitle.style.display = 'none';
